@@ -168,6 +168,11 @@ export default function ScanPage() {
     setMessage('Name saved')
   }
 
+  function formatScore(points: number | null) {
+    if (points === null) return '--'
+    return `${points > 0 ? '+' : ''}${points}`
+  }
+
   return (
     <main style={pageStyle}>
       <img src="/logo.png" style={logoStyle} />
@@ -179,16 +184,17 @@ export default function ScanPage() {
         <div style={badgeStyle}>LIVE SCANNER</div>
         <h1 style={titleStyle}>Easter Egg Hunt</h1>
         <p style={subtitleStyle}>Scan each QR code to collect points instantly.</p>
+      </section>
 
-        <div style={playerCardStyle}>
-          <div>
-            <div style={playerLabelStyle}>Current Player</div>
-            <div style={playerNameStyle}>{savedName || 'Not set'}</div>
-          </div>
+      <section style={statusGridStyle}>
+        <div style={statusCardStyle}>
+          <div style={statusLabelStyle}>Status</div>
+          <div style={statusValueStyle}>{message}</div>
+        </div>
 
-          <button onClick={openChangeNameModal} style={secondaryButtonStyle}>
-            Change Name
-          </button>
+        <div style={scoreCardStyle}>
+          <div style={statusLabelStyle}>Last Score</div>
+          <div style={scoreValueStyle}>{formatScore(lastPoints)}</div>
         </div>
       </section>
 
@@ -211,18 +217,15 @@ export default function ScanPage() {
         <div id="reader" style={readerStyle} />
       </section>
 
-      <section style={statusGridStyle}>
-        <div style={statusCardStyle}>
-          <div style={statusLabelStyle}>Status</div>
-          <div style={statusValueStyle}>{message}</div>
+      <section style={playerCardStyle}>
+        <div>
+          <div style={playerLabelStyle}>Current Player</div>
+          <div style={playerNameStyle}>{savedName || 'Not set'}</div>
         </div>
 
-        <div style={scoreCardStyle}>
-          <div style={statusLabelStyle}>Last Score</div>
-          <div style={scoreValueStyle}>
-            {lastPoints !== null ? `+${lastPoints}` : '--'}
-          </div>
-        </div>
+        <button onClick={openChangeNameModal} style={secondaryButtonStyle}>
+          Change Name
+        </button>
       </section>
 
       {showNameModal && (
@@ -344,12 +347,16 @@ const titleStyle: React.CSSProperties = {
 }
 
 const subtitleStyle: React.CSSProperties = {
-  margin: '10px 0 18px',
+  margin: '10px 0 0',
   fontSize: '16px',
   color: '#6b7280',
 }
 
 const playerCardStyle: React.CSSProperties = {
+  position: 'relative',
+  zIndex: 1,
+  maxWidth: '760px',
+  margin: '20px auto 0',
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
@@ -448,9 +455,9 @@ const statusGridStyle: React.CSSProperties = {
   position: 'relative',
   zIndex: 1,
   maxWidth: '760px',
-  margin: '0 auto',
+  margin: '0 auto 20px',
   display: 'grid',
-  gridTemplateColumns: '1fr 1fr',
+  gridTemplateColumns: '1fr',
   gap: '14px',
 }
 
