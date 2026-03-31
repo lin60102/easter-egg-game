@@ -533,14 +533,19 @@ const modalTextStyle: React.CSSProperties = {
 }
 
 const inputStyle: React.CSSProperties = {
-  width: '100%',
+   width: '100%',
   padding: '14px 16px',
   borderRadius: '14px',
-  border: '1px solid #d1d5db',
+
+  border: '1px solid #e5e7eb',      // ✅ 改這裡
+  backgroundColor: '#f9fafb',       // ✅ 加這行
+
   fontSize: '16px',
   marginBottom: '16px',
   outline: 'none',
   boxSizing: 'border-box',
+
+  color: '#111827',                 // ✅ 文字顏色
 }
 
 const modalButtonRowStyle: React.CSSProperties = {
