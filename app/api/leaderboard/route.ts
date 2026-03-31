@@ -1,17 +1,29 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
-
 type ClaimRow = {
   player_name: string
   points: number
 }
 
+function getSupabase() {
+  const supabaseUrl = process.env.SUPABASE_URL
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+  if (!supabaseUrl) {
+    throw new Error('Missing SUPABASE_URL')
+  }
+
+  if (!serviceRoleKey) {
+    throw new Error('Missing SUPABASE_SERVICE_ROLE_KEY')
+  }
+
+  return createClient(supabaseUrl, serviceRoleKey)
+}
+
 export async function GET() {
   try {
+    const supabase = getSupabase()
+
     const { data, error } = await supabase
       .from('claims')
       .select('player_name, points')
@@ -38,7 +50,7 @@ export async function GET() {
       .sort((a, b) => b.total_points - a.total_points)
 
     return Response.json({ leaderboard })
-  } catch (err) {
+  } catch {
     return Response.json({ error: 'Server error' }, { status: 500 })
   }
 }

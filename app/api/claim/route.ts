@@ -1,12 +1,23 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabase = createClient(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+function getSupabase() {
+  const supabaseUrl = process.env.SUPABASE_URL
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+  if (!supabaseUrl) {
+    throw new Error('Missing SUPABASE_URL')
+  }
+
+  if (!serviceRoleKey) {
+    throw new Error('Missing SUPABASE_SERVICE_ROLE_KEY')
+  }
+
+  return createClient(supabaseUrl, serviceRoleKey)
+}
 
 export async function POST(req: Request) {
   try {
+    const supabase = getSupabase()
     const { token, playerId } = await req.json()
 
     if (!token) {
@@ -72,7 +83,7 @@ export async function POST(req: Request) {
       success: true,
       points: egg.points,
     })
-  } catch {
+  } catch (error) {
     return Response.json({ error: 'Server error' }, { status: 500 })
   }
 }
